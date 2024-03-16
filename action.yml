@@ -61,7 +61,9 @@ runs:
       id: gpg_decrypt
       shell: bash
       run: |
+        TEMP_FILE='rwenojrempewaio.txt'
         FILE="${{ inputs.file_path }}"
+        OUTPUT_FILE="$(echo ${FILE} | sed "s/\.gpg//")"
         SECRET_FILE_PATH='action/secret_text.txt'
         if [ -d gpg_action ]
         then
@@ -70,5 +72,12 @@ runs:
         ls -la
         ls -la ${FILE}
         ls -la ${SECRET_FILE_PATH}
-        SECRET_HANDLE=$(echo "$(cat ${SECRET_FILE_PATH})" | sudo gpg --batch --passphrase-fd 0 --decrypt "${FILE}")
+        gpg --quiet --batch --yes --decrypt \
+          --passphrase="$(cat ${SECRET_FILE_PATH})" \
+          --output "${OUTPUT_FILE}" "${FILE}"
+        echo -n '::add-mask::' > ${TEMP_FILE}
+        cat ${OUTPUT_FILE} >> ${TEMP_FILE}
+        cat ${TEMP_FILE}
+        rm ${TEMP_FILE}
+        SECRET_HANDLE=$(cat ${OUTPUT_FILE})
         echo "handle=$SECRET_HANDLE" >> "$GITHUB_OUTPUT"
