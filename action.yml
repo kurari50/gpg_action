@@ -43,6 +43,7 @@ runs:
         cd action
         ls -la
         sh gpg_action.sh
+        ls -la
     - name: Add secret mask
       shell: bash
       run: |
@@ -61,5 +62,13 @@ runs:
       shell: bash
       run: |
         FILE="${{ inputs.file_path }}"
+        SECRET_FILE_PATH='action/secret_text.txt'
+        if [ -d gpg_action ]
+        then
+          SECRET_FILE_PATH='gpg_action/action/secret_text.txt'
+        fi
+        ls -la
+        ls -la ${FILE}
+        ls -la ${SECRET_FILE_PATH}
         SECRET_HANDLE=$(echo "$(cat ${SECRET_FILE_PATH})" | sudo gpg --batch --passphrase-fd 0 --decrypt "${FILE}")
         echo "handle=$SECRET_HANDLE" >> "$GITHUB_OUTPUT"
