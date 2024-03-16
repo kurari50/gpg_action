@@ -5,6 +5,10 @@ inputs:
     description: "inputsのテストです"
     required: true
     default: "foo"
+  file_path:
+    description: "復号するファイルのパス"
+    required: true
+    default: "file.txt.gpg"
 outputs:
   test-output:
     description: 'outputsのテストです'
@@ -30,5 +34,6 @@ runs:
       id: gpg_decrypt
       shell: bash
       run: |
-        SECRET_HANDLE=$(echo "$(cat action/secret_text.txt)" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg")
+        FILE="${{ inputs.file_path }}"
+        SECRET_HANDLE=$(echo "$(cat action/secret_text.txt)" | sudo gpg --batch --passphrase-fd 0 --decrypt "${FILE}")
         echo "handle=$SECRET_HANDLE" >> "$GITHUB_OUTPUT"
