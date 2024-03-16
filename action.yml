@@ -18,12 +18,20 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: ls
+      shell: bash
+      run: |
+        ls -la
     - uses: actions/checkout@v4
       with:
         path: 'gpg_action'
         repository: 'kurari50/gpg_action'
         sparse-checkout: |
           action
+    - name: ls
+      shell: bash
+      run: |
+        ls -la
     - name: Generate secret file
       shell: bash
       run: |
