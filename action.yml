@@ -15,5 +15,6 @@ runs:
       shell: bash
       run: echo "test"
     - name: gpg decrypt
+      shell: bash
       run: |
         echo "FAAF37E9-FB99-49C2-A20D-28BA6AEE665B" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg" 
