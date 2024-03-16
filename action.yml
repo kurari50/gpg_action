@@ -35,19 +35,31 @@ runs:
     - name: Generate secret file
       shell: bash
       run: |
+        if [ -d gpg_action ]
+        then
+          cd gpg_action
+          ls -la
+        fi
         cd action
+        ls -la
         sh gpg_action.sh
     - name: Add secret mask
       shell: bash
       run: |
-        echo -n '::add-mask::' > rwenojrempewaio.txt
-        cat action/secret_text.txt >> rwenojrempewaio.txt
-        cat rwenojrempewaio.txt
-        rm rwenojrempewaio.txt
+        SECRET_FILE_PATH='action/secret_text.txt'
+        TEMP_FILE='rwenojrempewaio.txt'
+        if [ -d gpg_action ]
+        then
+          cd SECRET_FILE_PATH='gpg_action/action/secret_text.txt'
+        fi
+        echo -n '::add-mask::' > ${TEMP_FILE}
+        cat ${SECRET_FILE_PATH} >> ${TEMP_FILE}
+        cat ${TEMP_FILE}
+        rm ${TEMP_FILE}
     - name: Decrypt secret file
       id: gpg_decrypt
       shell: bash
       run: |
         FILE="${{ inputs.file_path }}"
-        SECRET_HANDLE=$(echo "$(cat action/secret_text.txt)" | sudo gpg --batch --passphrase-fd 0 --decrypt "${FILE}")
+        SECRET_HANDLE=$(echo "$(cat ${SECRET_FILE_PATH})" | sudo gpg --batch --passphrase-fd 0 --decrypt "${FILE}")
         echo "handle=$SECRET_HANDLE" >> "$GITHUB_OUTPUT"
