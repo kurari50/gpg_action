@@ -46,11 +46,11 @@ runs:
     - name: Add secret mask
       shell: bash
       run: |
-        SECRET_FILE_PATH='action/secret_text.txt'
         TEMP_FILE='rwenojrempewaio.txt'
+        SECRET_FILE_PATH='action/secret_text.txt'
         if [ -d gpg_action ]
         then
-          cd SECRET_FILE_PATH='gpg_action/action/secret_text.txt'
+          SECRET_FILE_PATH='gpg_action/action/secret_text.txt'
         fi
         echo -n '::add-mask::' > ${TEMP_FILE}
         cat ${SECRET_FILE_PATH} >> ${TEMP_FILE}
