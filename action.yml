@@ -14,3 +14,6 @@ runs:
     - name: Echo
       shell: bash
       run: echo "test"
+    - name: gpg decrypt
+      run: |
+        echo "${{ secrets.TEXT }}" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg" 
