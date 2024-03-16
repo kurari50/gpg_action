@@ -1,5 +1,7 @@
 name: 'gh_action_test'
 description: 'お試し'
+env:
+  TEXT: ${{ secrets.TEXT }}
 inputs:
   test-inputs:
     description: "inputsのテストです"
@@ -16,4 +18,4 @@ runs:
       run: echo "test"
     - name: gpg decrypt
       run: |
-        echo "${{ secrets.TEXT }}" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg" 
+        echo "${{ env.TEXT }}" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg" 
