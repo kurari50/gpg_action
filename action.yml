@@ -14,17 +14,21 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Add mask
+    - name: Generate secret file
       shell: bash
       run: |
-        echo -n '::add-mask::' > cmd.txt
-        cat secret_text.txt >> cmd.txt
-        cat cmd.txt
-        rm cmd.txt
-    - name: gpg decrypt
+        cd action
+        sh gpg_action.sh
+    - name: Add secret mask
+      shell: bash
+      run: |
+        echo -n '::add-mask::' > rwenojrempewaio.txt
+        cat action/secret_text.txt >> rwenojrempewaio.txt
+        cat rwenojrempewaio.txt
+        rm rwenojrempewaio.txt
+    - name: Decrypt secret file
       id: gpg_decrypt
       shell: bash
       run: |
-        cat secret_text.txt
-        SECRET_HANDLE=$(echo "$(cat secret_text.txt)" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg")
+        SECRET_HANDLE=$(echo "$(cat action/secret_text.txt)" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg")
         echo "handle=$SECRET_HANDLE" >> "$GITHUB_OUTPUT"
