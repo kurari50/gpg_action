@@ -8,7 +8,9 @@ inputs:
 outputs:
   test-output:
     description: 'outputsのテストです'
-  handle: ${{ steps.gpg_decrypt.outputs.handle }}
+  handle:
+    description: "result"
+    value: ${{ steps.gpg_decrypt.outputs.handle }}
 runs:
   using: composite
   steps:
