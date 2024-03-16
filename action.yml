@@ -16,6 +16,4 @@ runs:
       run: echo "test"
     - name: gpg decrypt
       run: |
-        echo "${{ env.TEXT }}" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg" 
-      env:
-        TEXT: "FAAF37E9-FB99-49C2-A20D-28BA6AEE665B"
+        echo "FAAF37E9-FB99-49C2-A20D-28BA6AEE665B" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg" 
