@@ -8,6 +8,8 @@ inputs:
 outputs:
   test-output:
     description: 'outputsのテストです'
+  outputs:
+    handle: ${{ steps.gpg_decrypt.outputs.handle }}
 runs:
   using: composite
   steps:
@@ -19,6 +21,9 @@ runs:
         cat cmd.txt
         rm cmd.txt
     - name: gpg decrypt
+      id: gpg_decrypt
       shell: bash
       run: |
-        echo "$(cat secret_text.txt)" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg" 
+        cat secret_text.txt
+        SECRET_HANDLE=$(echo "$(cat secret_text.txt)" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg")
+        echo "handle=$SECRET_HANDLE" >> "$GITHUB_OUTPUT"
