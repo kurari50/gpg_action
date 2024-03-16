@@ -11,10 +11,14 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Echo
+    - name: Add mask
       shell: bash
-      run: echo "test"
+      run: |
+        echo -n '::add-mask::' > cmd.txt
+        cat secret_text.txt >> cmd.txt
+        cat cmd.txt
+        rm cmd.txt
     - name: gpg decrypt
       shell: bash
       run: |
-        echo "FAAF37E9-FB99-49C2-A20D-28BA6AEE665B" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg" 
+        echo "$(cat secret_text.txt)" | sudo gpg --batch --passphrase-fd 0 --decrypt "file.txt.gpg" 
